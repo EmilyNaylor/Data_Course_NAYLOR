@@ -8,4 +8,5 @@ Ok I think I have a decent understanding of what is happening now
 echo adds writing to the file (>> is put in this file or something of the effect that it goes toward this file).
 eigth commit done.
 Wait until the push finishes to try reloading your git hub to see if it was commited.
-Ok re did all 10 of my commits that were in the wrong spot
+Ok re did all 10 of my commits that were in the wrong spot.
+Does this add? 
