@@ -6,3 +6,4 @@ Fun tip for any of my classmates who did not already know it, but if you want to
 The command for locating where you are in a system is pwd
 Ok I think I have a decent understanding of what is happening now
 echo adds writing to the file (>> is put in this file or something of the effect that it goes toward this file).
+eigth commit done.
