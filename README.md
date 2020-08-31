@@ -11,3 +11,4 @@ Wait until the push finishes to try reloading your git hub to see if it was comm
 Ok re did all 10 of my commits that were in the wrong spot.
 Does this add? 
 I am checking to make sure I can still do this
+I remeber there was a way to put all of the commands that I had done into a text file but I don't remeber what the process was. 
