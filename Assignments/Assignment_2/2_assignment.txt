@@ -1,0 +1,17 @@
+1. 
+cd Desktop
+cd Data_Course_NAYLOR/Assignments/Assignment_2
+wc -l ../../Data/data-shell/data/pdb/m*.pdb
+2.
+wc -l ../../Data/data-shell/data/pdb/m*.pdb > m_lines.txt
+3.
+cat ../../Data/data-shell/data/animals.txt | cut -d "," -f 2 | sort -u >> unique_animals.txt
+4.
+cat ../../Data/BioLog_Plate_Data.csv | cut -d "," -f 5 | sort -u > unique_C-substrates.txt
+5.
+wc -l ../../Data/data-shell/data/*.txt | sort -n | tail -2 | head -1
+6.
+## make a variable ##
+maybe=$(find ../../Data/data-shell/many_files -name "*.txt")
+## loop for the script to find the sum of all of the lines in the sum_lines.txt ##
+for i in $maybe; do bash ../../Data/data-shell/scripts/sum_lines.sh $maybe > sum_lines.txt; done
