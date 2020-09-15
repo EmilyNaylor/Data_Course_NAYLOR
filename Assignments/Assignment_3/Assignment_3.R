@@ -21,8 +21,17 @@
 # Vectors are 1-dimensional series of values in some order
 1:10 # ':' only works for integers
 letters # built-in pre-made vector of a - z
+LETTERS
+
+class(1:10)
+class(1)
+class(1L)
+class(333L)
+class(3.333L)
 
 
+x <- 3
+y <- 5
 
 vector1 <- c(1,2,3,4,5,6,7,8,9,10)
 vector2 <- c(5,6,7,8,4,3,2,1,3,10)
@@ -34,7 +43,7 @@ vector1*vector2
 
 vector3 + 1 # can't add 1 to "a"
 
-
+c(1,"a","b")
 
 # Data Frames ####
 # R has quite a few built-in data sets
@@ -48,6 +57,7 @@ data("iris") # load it like this
 # Rows and columns
 # Each row or column is a vector
 
+View(iris)
 
 dat <- iris # can rename the object to be easier to type if you want
 
@@ -63,12 +73,18 @@ dat$Sepal.Length
 # You can also use square brackets to get specific 1-D or 2-D subsets of a data frame (rows and/or columns)
 dat[1,1] # [Rows, Columns]
 dat[1:3,5]
+letters[5]
+letters[c(6,5)]
+
+let <- c(1,3,5,7,9)
+letters[let]
 
 # Plotting ####
 
 # Can make a quick plot....just give vectors for x and y axes
 plot(x=dat$Petal.Length, y=dat$Sepal.Length)
 plot(x=dat$Species, y=dat$Sepal.Length)
+?plot
 
 
 # Object "Classes" ####
@@ -92,6 +108,7 @@ class(nums) # make sure it's numeric
 as.factor(nums) # show in console
 nums_factor <- as.factor(nums) #assign it to a new object as a factor
 class(nums_factor) # check it
+length(nums)
 
 #check it out
 plot(nums) 
@@ -105,7 +122,8 @@ plot(nums, main = "My Title", xlab = "My axis label", ylab = "My other axis labe
 
 ?jpeg()
 
-
+jpeg("./exampleplot.jpeg")
+plot(nums, main = "My Title", xlab = "My axis label", ylab = "My other axis label")
 dev.off()
 
 
@@ -133,13 +151,18 @@ df1 # look at it...note column names are what we gave it.
 # Make a data frame from the first 20 rows of iris that has only Species and Sepal.Length columns
 # save it into an object called "dat3"
 
+iris[1:20, c("Species","Sepal.Length")]
 
-
-
+spp <- c("Species", "Sepal.Length")
+rows <- c(1:20)
+iris[rows,spp]
+dat3 <- iris[rows,spp]
+str(dat3)
+str(df1)
 
 # WRITING OUT FILES FROM R ####
 ?write.csv()
-
+write.csv(dat3,"./NAYLOR_first_file.csv")
 
 # Write your new object "dat3" to a file named "LASTNAME_first_file.csv" in your PERSONAL git repository
 
