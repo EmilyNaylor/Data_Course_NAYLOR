@@ -1,0 +1,18 @@
+#Questions:
+
+#1. What other stuff does read.csv() do automatically?
+## It opens up the data frame file in the file viewer an organizes the date into a spreadsheet.
+#2. How is it different from read.csv2()?
+## The difference is that csv2 is a file type that uses ";" to separate and "," to act as decimals.
+#3. Why does read.csv2() even exist?
+## It exists based on language differences, another language may use a comma as decimal place rather than a period.
+#4. How could I change the parameters of read.csv() to make it so the class of the “State” column is “character” instead of “factor?”
+## You can change it to a character using the following command:
+as.character(df$State)
+#5. What command would give the summary stats for ONLY the Home.Value column?
+## df[,"Home.Value"]
+#6. What value is returned by the command: names(df)[4] ?
+## Home.Value
+#7. What is happening when you add (…col=df$region) to the above plotting code?
+#In other words, what happens when you run: plot(x=df$Year,y=df$Land.Value,col=df$region)
+##It will color the points by region.
