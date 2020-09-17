@@ -23,6 +23,6 @@ plot(x=Ecosystem_factor,y=maps$Lat)
 
 ?plot
 ?png
-png("silly_boxplot.png")
+png("silly_boxplot.png",width=960)
 plot(x=Ecosystem_factor,y=maps$Lat,main="Silly Boxplot",xlab="Ecosystem",ylab="Latitude")
 dev.off()
