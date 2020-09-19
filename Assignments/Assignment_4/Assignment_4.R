@@ -9,13 +9,10 @@ read.delim2("../../Data/ITS_mapping.csv")
 maps2 <- read.delim2("../../Data/ITS_mapping.csv")
 ?plot
 ?boxplot
-plot(x=maps$Ecosystem, y=maps$Lat)
 class(maps$Ecosystem)
 as.factor(maps$Ecosystem)
 Ecosystem_factor <- as.factor(maps$Ecosystem)
 class(Ecosystem_factor)
-boxplot(x=Ecosystem_factor, y=maps$Lat)
-plot(x=maps$Ecosystem,y=maps$Lat)
 boxplot(Lat ~ Ecosystem, data = maps)
 dev.off()
 class(maps$Ecosystem)
