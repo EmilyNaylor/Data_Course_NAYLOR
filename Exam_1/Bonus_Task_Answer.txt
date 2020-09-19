@@ -1,0 +1,2 @@
+"Year","Average.DNA.Concentration"
+"2007",1.46338613103333
