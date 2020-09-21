@@ -6,9 +6,9 @@
 ## The difference is that csv2 is a file type that uses ";" to separate and "," to act as decimals.
 #3. Why does read.csv2() even exist?
 ## It exists based on language differences, another language may use a comma as decimal place rather than a period.
-#4. How could I change the parameters of read.csv() to make it so the class of the “State” column is “character” instead of “factor?”
+#4. How could I change the parameters of read.csv() to make it so the class of the “State” column is “factor” instead of character?
 ## You can change it to a character using the following command:
-State_character <- as.character(df$State)
+read.csv("../../Data/landdata-states.csv", stringsAsFactors =  TRUE)
 #5. What command would give the summary stats for ONLY the Home.Value column?
 ## df[,"Home.Value"]
 #6. What value is returned by the command: names(df)[4] ?
