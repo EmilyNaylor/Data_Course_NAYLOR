@@ -1,0 +1,44 @@
+library(tidyverse)
+
+
+data("iris")
+str(iris)
+
+df <- read.csv("./Data/bad_data.csv")
+
+df_long <- pivot_longer(df, 1:3, names_to = "Days",values_to = "Grams")
+df_long$Days <- str_remove(df_long$Days, "Day")
+df_long$Days <- as.numeric(df_long$Days)
+
+str_remove(df_long$Days, "Day")
+
+ggplot(df_long, aes(x=Days,y=Grams)) +
+  geom_col()
+
+
+library(readxl)
+#read in excel sheet with read_xlsx
+df <- read_xlsx("./Data/wide_data_example.xlsx")
+
+df$`Treatment 1` <- as.numeric(df$`Treatment 1`)
+
+df_long <- pivot_longer(df, 2:3, names_to = "Treatment",values_to = "Mass_g",names_prefix = "Treatment")
+
+ggplot(df_long, aes(y=Mass_g, x=Treatment))+
+  geom_boxplot()
+
+
+df2 <- read.csv("./Data/BioLog_Plate_Data.csv")
+hr_cols <- c("Hr_24","Hr_48","Hr_144")
+
+df2_long <- pivot_longer(df2,
+                         hr_cols,
+                         names_to = "Time",
+                         values_to = "Absorbance",
+                         names_prefix = "Hr_")
+df2_long$Time <- as.numeric(df2_long$Time)
+ggplot(df2_long, aes(x=Time, y=Absorbance, color=Substrate))+
+  geom_smooth(se=FALSE)+
+  facet_wrap(~Sample.ID)+
+  theme_minimal()
+class(df2_long$Time)

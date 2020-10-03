@@ -89,7 +89,7 @@ ggplot(midwest, aes(x=area, y=poptotal)) +
 # we can specify "color" inside the "aesthetic" aes() function.
 p3 <- ggplot(midwest, aes(x=area, y=poptotal)) + 
   geom_point(aes(color=state),size=3) + 
-  geom_smooth(method="lm",color="firebrick") + 
+   geom_smooth(method="lm",color="firebrick") + 
   coord_cartesian(xlim=c(0,0.1), ylim=c(0, 1000000)) + 
   labs(title="Area Vs Population", subtitle="From midwest dataset", y="Population", x="Area", caption="Midwest Demographics")
 p3
@@ -182,6 +182,7 @@ data("MplsDemo") # demographic info by neighborhood can be joined to our police 
 
 # don't worry about this yet...you'll learn how to do this soon, but I'm just adding mean neighborhood income
 # to each row of the police stop data set
+library (plyr)
 income = as.numeric(as.character(plyr::mapvalues(MplsStops$neighborhood, from=MplsDemo$neighborhood, to = MplsDemo$hhIncome)))
 MplsStops$income <- income
 
@@ -218,6 +219,11 @@ ggplot(random_data, aes(x=x, y=y) ) +
   theme_bw()
 
 
-
+data("mtcars")  # load data
+mtcars$`car name` <- rownames(mtcars)  # create new column for car names
+mtcars$mpg_z <- round((mtcars$mpg - mean(mtcars$mpg))/sd(mtcars$mpg), 2)  # compute normalized mpg
+mtcars$mpg_type <- ifelse(mtcars$mpg_z < 0, "below", "above")  # above / below avg flag
+mtcars <- mtcars[order(mtcars$mpg_z), ]  # sort
+mtcars$`car name` <- factor(mtcars$`car name`, levels = mtcars$`car name`)  # convert to factor to retain sorted order in plot.
 
 
