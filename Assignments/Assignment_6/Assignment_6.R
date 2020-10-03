@@ -80,5 +80,5 @@ p3
 
 p1 + p2 + p3 
 
-## 12 ##
+## 13 ##
 ggsave("combined_mtcars_plot.png", width = 15)
