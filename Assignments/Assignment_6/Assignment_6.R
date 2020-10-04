@@ -62,12 +62,15 @@ p1 <- ggplot(mtcars,aes(x=wt, y=mpg))+
   labs(title = "Effect of Weight on MPG", x= "Weight (*1000 lbs)", y= "Miles per a Gallon")+
   geom_smooth(method="lm", se=FALSE, aes(color=as.factor(cyl)))+
   geom_point(aes(color=as.factor(cyl)))+
+  scale_color_manual(values = c("#00798c", "#d1495b","#edae49"), name = "# fo cylinders", labels = c('4', '6','8'))+
   theme_minimal()
 p1
 
 p2 <- ggplot(mtcars,aes(x=as.factor(cyl), y=mpg, color=as.factor(cyl)))+
   labs(title = "Effect of Cylinder Number on MPG", x= "# of Cylinders", y= "Miles per a Gallon")+
   geom_violin(aes(fill=as.factor(cyl)))+
+  scale_fill_manual(values = c("#00798c", "#d1495b","#edae49"), name = "# of cylinders", labels = c('4', '6','8'))+
+  scale_color_manual(values = c("#00798c", "#d1495b","#edae49"), name = "# of cylinders", labels = c('4', '6','8'))+
   theme_minimal()
 p2
 
@@ -75,6 +78,7 @@ p3 <- ggplot(mtcars,aes(x=hp, y=mpg))+
   labs(title = "Effect of Horsepower on MPG", x= "Horspower", y= "Miles per a Gallon")+
   geom_smooth(method="lm", se=FALSE, aes(color=as.factor(cyl)))+
   geom_point(aes(color=as.factor(cyl)))+
+  scale_color_manual(values = c("#00798c", "#d1495b","#edae49"), name = "# of cylinders", labels = c('4', '6','8'))+
   theme_minimal()
 p3
 
