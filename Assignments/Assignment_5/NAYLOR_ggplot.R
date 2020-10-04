@@ -75,4 +75,4 @@ p2 + theme(axis.text.y = element_blank(),
            axis.line.y = element_blank(),
            axis.ticks.y = element_blank())
 
-
+ggsave("./iris_fig4.png")
