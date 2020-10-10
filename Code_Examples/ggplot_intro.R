@@ -26,6 +26,8 @@ data("midwest", package = "ggplot2")
 # Let’s initialize a basic ggplot based on the midwest dataset that we loaded.
 ggplot(midwest) # what do you see?
 
+names(midwest)
+
 # give it some aesthetics to work with...
 ggplot(midwest, aes(x=area, y=poptotal))  # area and poptotal are columns in 'midwest'
 
@@ -96,7 +98,12 @@ p3 + scale_color_brewer(palette = "Set1")
 library(RColorBrewer)
 brewer.pal.info
 
+library(remotes)
 # Make your own and take a peek at it:
+remotes::install_github("wilkelab/cowplot")
+install.packages("colorspace", repos = "http://R-Forge.R-project.org")
+remotes::install_github("clauswilke/colorblindr")
+
 library(colorblindr)
 pal = c("#c4a113","#c1593c","#643d91","#820616","#477887","#688e52",
         "#12aa91","#705f36","#8997b2","#753c2b","#3c3e44","#b3bf2d",
@@ -141,7 +148,31 @@ p5
 
 p5 + geom_boxplot()
 p5 + geom_violin()
+p5 + geom_density()
+
+ggplot(midwest, aes(x=percollege,fill=state))+geom_density(alpha=.5)
+
 p5 + geom_bar(stat="identity") # something wrong with this picture!
+
+
+
+
+
+
+
+data("mtcars")
+names(mtcars)
+?mtcars
+
+
+
+ggplot(mtcars, aes(x=as.factor(carb), y=(mpg), fill=as.factor(carb))) + 
+         geom_boxplot(aes(col=as.factor(carb)))+
+             labs(x="Number of carburetors", y="Miles per Gallon")
+
+
+
+
 
 
 # Geoms for looking at a single variable's distribution:
@@ -234,11 +265,52 @@ ggplot(counts, aes(x=Var1,y=Freq)) + geom_point() + geom_smooth(method="lm") +
 
 
 
+data("iris")
+
+ggplot(iris,aes(x=Sepal.Length, y=Petal.Length))+
+  geom_point()+ geom_smooth(method = "lm",aes(color=Species))
+
+
+p1=ggplot(iris,aes(x=Sepal.Length, y=Sepal.Width))+
+  geom_point()+ geom_smooth(aes(color=Species))+
+  facet_wrap(~Species)+
+  labs(title = "Another Iris Plot")+
+  scale_color_manual(values= c("#ffffff","#8c2b2b","#f0e65d"))
+  
+p1+theme_bw()
+p1+theme_classic()
+p1+theme_dark()
+p1+theme_linedraw()
+p1+theme_grey()
 
 
 
 
 
+library(ggimage)
 
+mtcars$image <- "path to image"
+ggplot(mtcars,aes(x=disp,y=mpg,image=image))+
+    geom_image()  
 
+library(gganimate)
 
+library(patchwork)
+
+p1/p2 + p
+
+#customize our own theme for a plot
+p1+ theme(axis.title = element_text(face = "bold"),
+          axis.title.x = element_text(face = "italic"),
+          plot.title = element_text(family = "arial", size = 26, color= "SteelBlue", face= "italic"),
+          panel.grid = element_blank(),
+          panel.background = element_rect(fill= "SteelBlue",color = "Purple"),
+          strip.text = element_text(face="italic", angle=180),
+          strip.background = element_rect(fill="White"),
+          axis.text.y = element_blank(),
+          axis.ticks = element_blank(),
+          legend.text = element_text(face = "italic"),
+          legend.position="top",
+          plot.margin = unit(c(0,0,1,1),unit="in"))
+    
+          

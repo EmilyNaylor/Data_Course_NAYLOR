@@ -1,0 +1,13 @@
+# Look through those plots and answer the following questions:
+# 1.  Which religious group correlates most strongly in a given area with the proportion of non-religious people?
+	LDS
+# 2.  What is the direction of that correlation?
+	It is a negative or downward correlation. As the proportion of LDS went up the proportion of non-religious people went down and vice-versa.
+# 3.  What can you say about the relationships shown here?
+	Excluding LDS, there is not much correlation between type of religion and the proportion of religious people. 
+# 4.  Examine the axis scales. How could you modify the code above to more accurately portray values on an "equal footing?"
+	You could change the scales to "fixed" instead:
+		utah %>%
+  pivot_longer(names_to = "Religion", values_to = "Proportion",religions) %>%
+  ggplot(aes(x=Proportion,y=Religious)) + geom_point() + geom_smooth(method="lm") + lims(y=c(0,1)) +
+  facet_wrap(~Religion,scales = "fixed") + theme_bw() + theme(panel.grid = element_blank(), strip.background = element_rect(fill="Gray"))
