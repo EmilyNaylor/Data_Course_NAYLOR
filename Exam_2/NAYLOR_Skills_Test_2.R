@@ -1,4 +1,4 @@
-library(dplyr)
+# load packages
 library(tidyverse)
 
 
@@ -93,54 +93,10 @@ ggsave("NAYLOR_Fig_2.jpg", plot=p2)
 
 
 ## filter and find the yearly mean by continent ##
-asia <- df2 %>%
-  filter(Continent == "Asia") %>%
-  na.omit() %>%
-  group_by(Year) %>%
-  mutate(MeanMR= mean(U5MR)) %>%
-  select(Continent,Year,MeanMR)
-
-europe <- df2 %>%
-  filter(Continent == "Europe") %>%
-  na.omit() %>%
-  group_by(Year) %>%
-  mutate(MeanMR= mean(U5MR)) %>%
-  select(Continent,Year,MeanMR)
-
-africa <- df2 %>%
-  filter(Continent == "Africa") %>%
-  na.omit() %>%
-  group_by(Year) %>%
-  mutate(MeanMR= mean(U5MR)) %>%
-  select(Continent,Year,MeanMR)
-
-americas <- df2 %>%
-  filter(Continent == "Americas") %>%
-  na.omit() %>%
-  group_by(Year) %>%
-  mutate(MeanMR= mean(U5MR)) %>%
-  select(Continent,Year,MeanMR)
-
-oceania <- df2 %>%
-  filter(Continent == "Oceania") %>%
-  na.omit() %>%
-  group_by(Year) %>%
-  mutate(MeanMR= mean(U5MR)) %>%
-  select(Continent,Year,MeanMR)
-
-
-## Combine all the yearly means into a new data-set##
-yearly_mean <- full_join(df2,asia, by=c("Year","Continent")) %>%
-  full_join(europe, by=c("Year","Continent")) %>%
-  full_join(africa, by=c("Year","Continent")) %>%
-  full_join(americas, by=c("Year","Continent")) %>%
-  full_join(oceania, by=c("Year","Continent")) %>%
-  pivot_longer(starts_with("MeanMR"),         ## shifts MeanMR back to one variable
-               names_to="Variable", 
-               values_to="MeanMR",
-               names_prefix="MeanMR.") %>% 
-  na.omit() %>%                              ## deletes any NA rows
-  select(-Variable)                          ## deletes extra variable (column)
+yearly_mean <- df2 %>%
+  group_by(Continent, Year) ## filters by continent and year
+  na.omit() %>%            ## removes any na values
+  mutate(MeanMR= mean(U5MR))## finds the mean mortality rate
 
 ## Re-creation of fig3 ##
 p3 <- yearly_mean %>% 
@@ -154,5 +110,35 @@ p3
 ## Export it to your Exam_2 folder as LASTNAME_Fig_3.jpg (note, that's a jpg, not a png) ##
 ggsave("NAYLOR_Fig_3.jpg", plot=p3)
   
+############
+## Task 6 ##
+############
 
-  
+## Re-create the graph shown in fig4.png ##
+## Note: The y-axis shows proportions, not raw numbers ##
+## This is a scatterplot, faceted by region ##
+
+
+## find the yearly proportion by region##
+prop <- df2 %>% 
+  group_by(Region, Year)%>%
+  na.omit()%>%
+  mutate(U5MR/sum(U5MR))%>%
+  arrange(Region)
+
+
+
+#copy figure 4##
+p4 <- prop %>% 
+  ggplot(aes(x=Year, y=U5MR/sum(U5MR)*1000))+
+           geom_point(color="blue",alpha=0.4, size=0.5)+
+           facet_wrap(~Region) + 
+          ylim(0,0.45) +
+          labs(y="Mortality Rate")+
+          theme_minimal()+
+          theme(strip.background = element_rect(color="black", fill="white"),
+                strip.text = element_text(size=7))
+p4
+
+## Export it to your Exam_2 folder as LASTNAME_Fig_3.jpg (note, that's a jpg, not a png) ##
+ggsave("NAYLOR_Fig_4.jpg", plot=p4)
