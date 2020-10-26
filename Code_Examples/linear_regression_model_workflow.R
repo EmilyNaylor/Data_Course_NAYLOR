@@ -22,6 +22,8 @@ iris %>% ggpairs(mapping = c("Species","Sepal.Length"))
 
 # Build possible models ####
 
+ggplot(iris,aes(x=Sepal.Width, y=Sepal.Length, color=Species))+geom_smooth(method="lm")+geom_point()
+
 # lm() is linear model. There are LOTS of other model types
 mod1 <- lm(data=iris, formula = Sepal.Length ~ Sepal.Width)
 mod2 <- lm(data=iris, formula = Sepal.Length ~ Sepal.Width + Species)
@@ -33,6 +35,7 @@ mod3 <- lm(data=iris, formula = Sepal.Length ~ Sepal.Width * Species)
 summary(mod1)
 summary(mod2)
 summary(mod3)
+"Sepal.Length= 2.2415 + 0.8036"
 
 # how to interpret results?
 # Coefficients, P-values, Adjusted R-squared

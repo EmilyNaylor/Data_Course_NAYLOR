@@ -1,0 +1,30 @@
+1. Are any of your predicted response values from your best model scientifically meaningless? Explain.
+None of my predicted response values seem that meaningless but I think this is because I used light for my predictions 
+and you cannot have negative light so they were all positive values which caused the growth rate to be likely positive. 
+
+2. In your plots, did you find any non-linear relationships? Do a bit of research online and give a link to at least one resource explaining how to deal with modeling non-linear relationships in R.
+Yes, the nitrogen plot looked as if it was a hyperbolic relationship. 
+https://analyticsindiamag.com/hands-on-guide-for-non-linear-regression-models-in-r/
+
+3.Write the code you would use to model the data found in “/Data/non_linear_relationship.csv” with a linear model (there are a few ways of doing this)
+##load the data in##
+dat <- read_csv("../../Data/non_linear_relationship.csv")
+
+##Plot the Data##
+ggplot(dat,aes(x=predictor,y=response))+
+  geom_point()+
+  geom_smooth(method="lm")
+
+##Plotting with a linear model##
+dat2 <- dat %>%
+  filter(predictor >= 1) %>% #99% data is above 1#
+  mutate(lpredictor = log2(predictor), lresponse= log2(response)) #log transform the data#
+
+##Take a look##
+ggplot(dat2,aes(x=lpredictor,y=lresponse))+
+  geom_point()+
+  geom_smooth(method="lm")
+
+##Make a model of the data##
+mod_dat <- lm(lpredictor ~ lresponse, data = dat2)
+summary(mod_dat)
