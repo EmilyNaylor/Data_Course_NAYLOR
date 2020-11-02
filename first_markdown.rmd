@@ -1,0 +1,87 @@
+---
+title: "First Markdown"
+author: "Naylor"
+date: "10/26/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+data(mtcars)
+library(tidyverse)
+library(modelr)
+```
+
+Here's a summary of mtcars. 
+```{r}
+summary(mtcars)
+```
+
+
+
+Here's a plot of miles per gallon as a function of hp
+```{r, message=FALSE, warning=FALSE, fig.align='center', fig.width=3, fig.height=4}
+ggplot(mtcars, aes(x=hp,y=mpg))+
+  geom_point()+
+  geom_smooth(method="lm")
+```
+
+
+What about text??
+
+# Text
+## Text
+### Text
+
+**bold**
+*italic*
+
+We would like to model the effect of various factors on miles per gallon.
+Let's start with a simple model where horsepower is the only predictor:
+
+```{r, echo=FALSE}
+mod1 <- glm(dat=mtcars,
+            formula = mpg~hp)
+mod2 <- glm(data = mtcars,
+            formula = mpg ~ poly(hp,2))
+summary(mod1)
+summary(mod2)
+```
+
+We built two versions of the model. The first is linear, the second is second-order
+polynomial...both using hp as the only predictor.
+
+Let's make a plot:
+```{r, echo=FALSE}
+
+gather_predictions(mtcars,mod1,mod2) %>%
+  ggplot(aes(x=hp,y=mpg))+
+  geom_point(aes(x=hp,y=mpg))+
+  geom_point(size=3,alpha=.25)+
+  geom_point(aes(y=pred,color=model))+
+  geom_smooth(aes(y=pred,color=model))
+```
+
+Which model is the best fit?
+Let's look at the root mean=sp of error:
+
+```{r}
+mean(residuals(mod1)^2)
+mean(residuals(mod2)^2)
+```
+
+
+Here, we are fitting a curved line using natural splines with  3rd order polynomial function..
+```{r}
+library(splines)
+ggplot(data=mtcars, aes(x=hp,y=mpg))+
+  geom_smooth(method="lm", formula = y ~ ns(x,3))
+
+```
+
+
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
+[hyperlink](https://www.google.com/) 
+
+some more text

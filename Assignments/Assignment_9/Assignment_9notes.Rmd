@@ -1,0 +1,104 @@
+---
+title: "Assignment_9 notes"
+author: "Naylor"
+date: "11/1/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+Put at line #84 in original assignmnet, not sure if I want to keep so safe keeping here.
+Determining if an undergraduate's GPA affects their GRE score
+```{r, echo=FALSE ,message=FALSE, include=FALSE}
+mod2 <- glm(data=df, gre ~ gpa)
+moda2 <- aov(data=df, gre ~ gpa)
+```
+
+Created two models where GRE score is a function of GPA using a linear model or the one way ANOVA model.
+```{r, echo=FALSE ,message=FALSE}
+summary(mod2)
+summary(moda2)
+```
+
+Determined which model was better using their mean residuals squared.
+```{r, echo=FALSE ,message=FALSE}
+mean(mod2$residuals^2)
+mean(moda2$residuals^2)
+```
+They were the same so the first linear model will be used.
+
+Now predictions based on the linear model will be added to test the model.
+```{r, message=FALSE}
+df2 <- add_predictions(df,mod2)
+# Make a new dataframe with the predictor values to be assessed. 
+# mod2 only has "GPA" as a predictor so that's what was added here.
+mod2df = data.frame(gpa = c(3.96,3.79,3.26,2.99,2.45))
+
+# making predictions
+pred = predict(mod2, newdata = mod2df)
+
+# combining hypothetical input data with hypothetical predictions into one new data frame
+hyp_preds <- data.frame(gpa = mod2df$gpa,
+                        pred = pred)
+
+# Add new column showing whether a data point is real or hypothetical
+df2$PredictionType <- "Real"
+hyp_preds$PredictionType <- "Hypothetical"
+
+# joining the real data and hypothetical data (with model predictions)
+fullpreds <- full_join(df2,hyp_preds)
+```
+
+Plot showing the predictions of the hypothetical GRE scores based upon the hypothetical GPAs of 3.96,3.79,3.26,2.99,2.45 using the linear model
+```{r, echo=FALSE, message=FALSE, fig.width=10}
+ggplot(fullpreds,aes(x=gpa,y=pred,color=PredictionType)) +
+  geom_point() +
+  geom_point(aes(y=gre),color="Black") +
+  theme_minimal()
+```
+
+It looks as though GPA does not have a very significant affect on GRE score so it will be taken out of the original model. 
+
+glm(formula = admit ~ gre + gpa + rank + gre:gpa, family = "binomial", 
+    data = df)
+```{r,echo=FALSE, message=FALSE,include=FALSE}
+mod3 <- glm(formula = admit ~ gre + gpa + rank, family = "binomial", 
+    data = df)
+moda3 <- aov(mod3$formula,data = df)
+```
+
+A linear model and an ANOVA one way model without GRE as a function of GPA.
+```{r, echo=FALSE ,message=FALSE}
+summary(mod3)
+summary(moda3)
+```
+
+Test of the mean residuals to determine which model is best.
+```{r, echo=FALSE ,message=FALSE}
+mean(mod_step$residuals^2)
+mean(mod1$residuals^2)
+mean(mod3$residuals^2)
+mean(moda3$residuals^2)
+```

@@ -1,0 +1,140 @@
+---
+title: "Assignment_9"
+author: "Naylor"
+date: "10/27/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## What matters for graduate school admission?
+
+When students finish their undergraduate degree, many decide that they want to further their education by going to graduate school. But what factors are important to getting accepted into graduate school? This assignment will look at GRE score, GPA, and the rank of the undergraduate institution. 
+
+First, the data set GradSchool_Admissions.csv was loaded in.
+```{r, echo=FALSE, message=FALSE, include=FALSE}
+library(modelr)
+library(broom)
+library(tidyverse)
+library(MASS)
+library(car)
+library(dplyr)
+library(patchwork)
+library(EnvStats)
+library(GGally)
+```
+
+```{r}
+df <- read.csv("../../Data/GradSchool_Admissions.csv")
+df$admit <- as.logical(df$admit)
+```
+
+Plot of admission by GRE scores and GPA where they were accepted if true and not accepted if false. The scores are colored by rank where 1 is a "top tier" undergraduate school.  
+```{r,echo=FALSE,message=FALSE, fig.width=10}
+p1 <- ggplot(df,aes(color=as.factor(rank)))+
+  geom_boxplot(aes(y=gre, x=as.factor(admit)))+
+  labs(x="Admission", y="GRE score", color="Rank")+
+  theme_minimal()
+p2 <- ggplot(df,aes(color=as.factor(rank)))+
+  geom_boxplot(aes(y=gpa, x=as.factor(admit)))+
+  labs(x="Admission", y="Cumulative GPA", color="Rank")+
+  theme_minimal()
+p1+p2
+```
+
+
+#### Determining how the factors affect one's grad school admission. 
+
+Determine if there are any significant outliers using the Rosner test.
+First if there are any values for GRE score that may be a significant outlier.
+```{r}
+gretest <- rosnerTest(df$gre,
+  k = 3)
+gretest
+```
+Second if there are any values for GPA that may be a significant outlier.
+```{r}
+gpatest <- rosnerTest(df$gpa,
+  k = 3)
+gpatest
+```
+There were no significant outliers within the data.
+
+Checked for any correlations between the variables. Looked particularly for potential correlation between admission and the other three variables. 
+```{r,message=FALSE,fig.width=12}
+ggpairs(data = df, columns = 1:4, title = "Graduate School Admission")
+```
+There looked to be a correlation between admission and an undergraduate's GRE score and GPA. There also was a significant positive correlation between GPA and GRE scores.
+
+
+The correlation between rank and admission was much less clear so a chi-square test was used to verify that there is a correlation between admission into graduate school and the rank of the students undergraduate school?
+```{r, echo=FALSE ,message=FALSE}
+chisq.test(table(df$admit, df$rank), correct = FALSE)
+summary(table(df$admit, df$rank))
+qchisq(0.95, 4-1)
+```
+The p-value is less than 0.05 and the Chi-Squared is greater than the critical value of 7.814728, therefore the null hypothesis that admission and rank are independent of each other is rejected. 
+
+Created a model that has admission as a function of rank, GRE scores, and GPA as either a linear model or a one way ANOVA model, while also taking into account the relationship between GRE score and GPA.
+```{r,echo=FALSE, message=FALSE,include=FALSE}
+mod_all <- glm(data=df, admit ~ gre*gpa*rank, family = "binomial")
+summary(mod_all)
+```
+
+```{r, echo=FALSE ,message=FALSE, include=FALSE}
+mod_step <- stepAIC(mod_all)
+```
+
+```{r, echo=FALSE ,message=FALSE}
+mod1 <- aov(mod_step$formula, data = df)
+```
+
+```{r, echo=FALSE ,message=FALSE}
+summary(mod_step)
+summary(mod1)
+```
+
+
+Determined which model was better using their mean residuals squared.
+```{r, echo=FALSE ,message=FALSE}
+mean(mod_step$residuals^2)
+mean(mod1$residuals^2)
+```
+The second model had the lowest mean residual so it was used as the model for predicting a student's admission or not. 
+
+Check how the residuals fit with the second model.
+```{r, echo=FALSE, message=FALSE, fig.width=10}
+ggplot(data=df, aes(mod1$residuals)) +
+geom_histogram(binwidth = 1, color = "black", fill = "purple4") +
+theme(panel.background = element_rect(fill = "white"),
+axis.line.x=element_line(),
+axis.line.y=element_line()) +
+  labs(x="Residuals", y="Count") +
+ggtitle("Histogram for Model Residuals")
+```
+The residuals are fairly close to zero as well as having a decent distribution on either side, so the data does fit the model. 
+
+Plot showing the likelihood of admission to graduate school based upon an undergraduate's school rank, GRE score, and GPA.
+```{r, echo=FALSE, message=FALSE, fig.width=10}
+add_predictions(df,mod1,type = "response") %>%
+  ggplot(aes(x=gpa,y=pred, color=gre))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x="GPA", y="Likelihood of Admission", color="GRE score")+
+  facet_wrap(~rank)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
