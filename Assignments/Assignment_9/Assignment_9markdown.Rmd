@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
   When students finish their undergraduate degree, many decide that they want to further their education by going to graduate school. But what factors are important to getting accepted into graduate school?
 There are a few parts of the application that applicants submit for acceptance to graduate schools. This assignment will look at GRE score, GPA, and the rank of the undergraduate institution. 
 
-  The data used was a set of 400 undergraduate students who applied to graduate programs. The data includes whether or not the student was accepted, what was the rank of their undergraduate institution where rank 1 is considered "top tier", their GRE score, and GPA. 
+  The data used was a set of 400 undergraduate students who applied to graduate programs. The data includes whether or not the student was accepted, the rank of their undergraduate institution where rank 1 is considered “top tier”, their GRE score, and GPA
 ```{r,message=FALSE, warning=FALSE}
 # Packages
 library(modelr)
@@ -98,7 +98,7 @@ A series of plots showing the different possible correlations of the data. There
 
 
   The correlation between rank and admission was much less clear so a chi-square test was used to verify that there is a correlation between admission into graduate school and the rank of the students undergraduate school.
-```{r,message=FALSE}
+```{r,message=FALSE, results="hide"}
 chisq.test(table(df$admit, df$rank), correct = FALSE)
 summary(table(df$admit, df$rank))
 qchisq(0.95, 4-1)
@@ -168,8 +168,7 @@ p3+p4/p5
   Plots showing the likelihood of admission to graduate school based upon an undergraduate's school rank, GRE score, and GPA. 
 
 ## Conclusion
-  A higher GPA and GRE score look as though they do raise a student's chance of getting into graduate school. However, it looks like if a student is in a rank 1 and rank 2 schools start with a better chance than those who attended a rank 3 or 4 undergraduate school. 
-
+  Based on the models above, an undergraduate student's GPA and GRE scores do seem to have a significant effect on their chance of getting in to graduate school. Notably, if a student applies from an undergraduate school with a ranking of 1 or 2, they will have better odds of graduate school acceptance than a student applying from a rank 3 or 4 school.
 
 
 

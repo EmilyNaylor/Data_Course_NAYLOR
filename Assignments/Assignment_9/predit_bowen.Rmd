@@ -1,0 +1,117 @@
+---
+title: "Assignment_9"
+author: "Bowen"
+date: "10/31/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r admissions, message=FALSE, warning=FALSE, echo=FALSE}
+df_admissions <- read.csv("../../Data/GradSchool_Admissions.csv", stringsAsFactors = FALSE)
+data(df_admissions)
+library(tidyverse)
+library(modelr)
+library(GGally)
+```
+
+
+### Below is a summary for admission rates
+```{r admission2, message=FALSE, echo=FALSE, fig.align='center'}
+summary(df_admissions)
+```
+
+
+### Below is a plot for predicted admissions based on GPA:
+```{r admissions2, message=FALSE, fig.align='center', echo=FALSE}
+df_admissions$admit <- as.logical(df_admissions$admit)
+df_admissions$rank <- factor(df_admissions$rank)
+mod1 <- glm(data = df_admissions, formula = admit ~ gre + gpa + rank, family = "binomial")
+df_withpredictions <- add_predictions(df_admissions, mod1, type = "response")
+ggplot(df_withpredictions, aes(x = gpa, y= pred, color= as.factor(rank)))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x = "GPA", y= "Prediction", title = "(p1) Grad School Admissions Predictions Based on GPA", subtitle = "Including University level ranking")
+```
+
+
+### The next two graphs show prediction percentages of a student with a 3.5 GPA from a rank 1 school vs a rank 2 school given different GRE scores:
+```{r hypothetical gre, message=FALSE, echo=FALSE, fig.align='center'}
+hypothetical_data <- data.frame(gre=c(500, 550, 600, 650, 700, 750),
+                                gpa=c(3.5, 3.5, 3.5, 3.5, 3.5, 3.5),
+                                rank=c("1", "1", "1", "1", "1", "1"))
+df2_withpredictions <- add_predictions(hypothetical_data, mod1, type = "response")
+ggplot(df2_withpredictions, aes(x = gre, y= pred))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x = "GRE Score", y= "Prediction", title = "(p2) Grad School Admissions Rate based on GRE", subtitle = "From a rank 1 University")
+```
+
+
+
+
+
+
+
+
+```{r plot, message=FALSE, echo=FALSE, fig.align='center'}
+hypothetical_data2 <- data.frame(gre=c(500, 550, 600, 650, 700, 750),
+                                gpa=c(3.5, 3.5, 3.5, 3.5, 3.5, 3.5),
+                                rank=c("2", "2", "2", "2", "2", "2"))
+df3_withpredictions <- add_predictions(hypothetical_data2, mod1, type = "response")
+ggplot(df3_withpredictions, aes(x = gre, y= pred))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x = "GRE Score", y= "Prediction", title = "(p3) Grad School Admissions Rate based on GRE", subtitle = "From a rank 2 University")
+```
+
+
+
+We can see that there is a significant difference in predicted grad school admissions from those coming from a rank 1 school vs rank 2.
+
+
+### Below is a graph that we can compare to the one above. Everything is the same except included this time is admit as a function of GRE and GPA together: 
+```{r plot4, echo=FALSE, message=FALSE, fig.align='center'}
+mod3 <- glm(data = df_admissions, formula = admit ~ gre * gpa + rank, family = "binomial")
+hypothetical_data3 <- data.frame(gre=c(500, 550, 600, 650, 700, 750),
+                                gpa=c(3.5, 3.5, 3.5, 3.5, 3.5, 3.5),
+                                rank=c("2", "2", "2", "2", "2", "2"))
+df4_withpredictions <- add_predictions(df_admissions, mod3, type = "response")
+ggplot(df4_withpredictions, aes(x = gre, y= pred, color = rank))+
+  geom_point()+
+  geom_smooth(method = "lm", color = "red")+
+  labs(title = "(p4)")
+```
+
+
+This is using the original/raw data, without predictions. This plot in particular is not very helpful...
+```{r plot5, message=FALSE, echo=FALSE, fig.align='center'}
+ggplot(df_admissions, aes(x = admit, y= gpa, color = as.factor(rank)))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(title = "(p5)")
+```
+
+
+
+
+
+### This plot only takes school ranking in to account. This is a prediction of 4 students with the same GPA and GRE but coming from differently ranked schools. It is interesting to note how big of a difference the school rank alone changes things. 
+
+```{r plot6, message=FALSE, echo=FALSE, fig.align='center'}
+hypothetical_data4 <- data.frame(gre=c(650, 650, 650, 650),
+                                gpa=c(3.5, 3.5, 3.5, 3.5),
+                                rank=c("1", "2", "3", "4"))
+df6_withpredictions <- add_predictions(hypothetical_data4, mod1, type = "response")
+ggplot(df6_withpredictions, aes(x = rank, y= pred))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x = "School rank", y= "Prediction", title = "(p6) Grad School Admissions Rate Predictions based on school ranking", subtitle = "All GRE and GPA scores are the same")
+```
+
+
+
+

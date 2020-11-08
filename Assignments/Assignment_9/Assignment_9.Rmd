@@ -1,43 +1,183 @@
 ---
+title: "Assignment_9"
+author: 
+- name: Emily Naylor
+- name: Peer-reviewed by Lacee Bowen
+date: "10/27/2020"
 output: 
-html_document:
-  number_sections=TRUE
-pagetitle: Assignment_9
+  html_document:
+    code_folding: hide
 ---
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# **Assignment 9**
-
-In this assignment, you will use R (within R-Studio) to:
-  
-+ Load and clean a real data set
-+ Conduct exploratory analyses, including informative figures
-+ Build and test appropriate models
-+ Draw conclusions about your data
-+ Combine all of the above into a well-documented R-Markdown report and export (knit) it into an HTML file
-
-**All file paths should be relative, starting from *your* Assignment_9 directory!!**
-
-**This means that you need to create a new R-Project named "Assignment_9.Rproj" in your Assignment_9 directory, and work from scripts within that.**
+# What matters for graduate school admission?
 
 
-## **For credit...**
+## Introduction
 
-1.  Push a completed version of your Rproj and R-markdown file (details at end of this assignment) to GitHub
-2.  Your score will also depend on your analyses and presentation of your final report
+  When students finish their undergraduate degree, many decide that they want to further their education by going to graduate school. But what factors are important to getting accepted into graduate school?
+There are a few parts of the application that applicants submit for acceptance to graduate schools. This assignment will look at GRE score, GPA, and the rank of the undergraduate institution. 
 
-____________
+  The data used was a set of 400 undergraduate students who applied to graduate programs. The data includes whether or not the student was accepted, the rank of their undergraduate institution where rank 1 is considered “top tier”, their GRE score, and GPA
+```{r,message=FALSE, warning=FALSE}
+# Packages
+library(modelr)
+library(broom)
+library(tidyverse)
+library(MASS)
+library(car)
+library(dplyr)
+library(patchwork)
+library(EnvStats)
+library(GGally)
+```
 
-# Your tasks:
+```{r}
+#loaded in data
+df <- read.csv("../../Data/GradSchool_Admissions.csv")
+#changed whether they were admitted or not as a true or false. 
+df$admit <- as.logical(df$admit)
+#change rank as a factor
+df$rank <- as.factor(df$rank)
+```
 
-+ Use the data set "/Data/GradSchool_Admissions.csv"
-+ You will explore and model the predictors of graduate school admission
-  - the "admit" column is coded as 1=success and 0=failure
-  - the other columns are the GRE score, the GPA, and the rank of the undergraduate institution, where I is "top-tier."
-+ Document your data explorations, figures, and conclusions in a reproducible R-markdown report
-+ Upload your **self-contained** R project, including knitted HTML report, to GitHub in *your* Assignment_9 directory
+**TABLE 1.1**
+  Summary of the data. Out of the 400 applicants, 127 of them were accepted into graduate school. 61 of the students came from a rank 1 undergraduate school, 151 came from a rank 2 school, 121 came from a rank 3, and there were 67 from a rank 4 undergraduate school. The average GRE score was 587.7 and the average GPA was 3.39. 
+```{r}
+summary(df)
+```
+
+```{r,,message=FALSE, fig.width=10}
+p1 <- ggplot(df,aes(color=rank))+
+  geom_boxplot(aes(y=gre, x=as.factor(admit)))+
+  labs(x="Admission", y="GRE score", color="Rank")+
+  theme_minimal()
+p2 <- ggplot(df,aes(color=rank))+
+  geom_boxplot(aes(y=gpa, x=as.factor(admit)))+
+  labs(x="Admission", y="Cumulative GPA", color="Rank")+
+  theme_minimal()
+p1+p2
+```
+
+**FIGURE 1.1**
+Box-plot of admission by GRE scores and GPA where they were accepted if true and not accepted if false. The scores are colored by rank where 1 is a "top tier" undergraduate school. Most of the students who were accepted had an average GRE score of over 600 and an average GPA of around 3.5.
+
+## Methods and Models
+
+**TABLE 2.1**
+  Table looking at the possibility of potential outliers within the GRE score data that can be seen in figure 1.1. The outliers were tested for using the Rosner test. There were not outliers found within the data. 
+```{r, message=FALSE, warning=FALSE, results="hide"}
+gretest <- rosnerTest(df$gre,
+  k = 3) 
+```
+
+```{r, message=FALSE, warning=FALSE}
+gretest$all.stats
+```
+
+
+**TABLE 2.2**
+  Table looking at the possibility of potential outliers within the GPA data that can be seen in figure 1.1. The outliers were tested for using the Rosner test. There were not outliers found within the data. 
+```{r, results="hide"}
+gpatest <- rosnerTest(df$gpa,
+  k = 3)
+```
+
+```{r}
+gpatest$all.stats
+```
+
+
+```{r,message=FALSE,fig.width=12}
+ggpairs(data = df, columns = 1:4, title = "Graduate School Admission")
+```
+
+**FIGURE 2.1**
+A series of plots showing the different possible correlations of the data. There is a possible positive correlation between admission with GRE score, GPA, and rank. There also is a positive correlation between GPA and GRE score.
+
+
+  The correlation between rank and admission was much less clear so a chi-square test was used to verify that there is a correlation between admission into graduate school and the rank of the students undergraduate school.
+```{r,message=FALSE, results="hide"}
+chisq.test(table(df$admit, df$rank), correct = FALSE)
+summary(table(df$admit, df$rank))
+qchisq(0.95, 4-1)
+```
+  The p-value is less than 0.05 and the Chi-Squared is greater than the critical value of 7.814728, therefore the null hypothesis that admission and rank are independent of each other is rejected. 
+
+
+### MODEL 1
+  Created a model that has admission as a function of rank, GRE scores, and GPA using a generalized linear model, while also taking into account the relationship between GRE score and GPA.
+```{r,message=FALSE, results="hide"}
+mod_all <- glm(data=df, admit ~ gre*gpa*rank, family = "binomial")
+summary(mod_all)
+```
+
+```{r,message=FALSE, results="hide"}
+mod1 <- stepAIC(mod_all)
+```
+
+**TABLE 3.1**
+  Summary of the generalized linear model. There was a significant p-value for admission being a function of the GRE score, GPA, and rank with rank 3 and rank 4 having a particularly low p-value. GRE score being a function of GPA did not have a significant p-value within this model. 
+```{r,message=FALSE}
+summary(mod1)
+```
+### MODEL 2
+  Created a model that has admission as a function of rank, GRE scores, and GPA using a generalized linear model, while not taking into account the relationship between GRE score and GPA.
+```{r,message=FALSE, results="hide"}
+mod2 <- glm(formula = admit ~ gre + gpa + rank, family = "binomial", 
+    data = df)
+```
+
+**TABLE 3.2**
+  Summary of the generalized linear model. There was a significant p-value for admission being a function of the GRE score, GPA, and rank with rank 3 and rank 4 having a particularly low p-value.
+```{r,message=FALSE}
+summary(mod2)
+```
+
+  The best model was determined using the mean squared residuals. The mean squared residual for model 1 is the top value and model 2 is the value at the bottom. 
+```{r,message=FALSE}
+mean(mod1$residuals^2)
+mean(mod2$residuals^2)
+```
+The second model had the lowest mean residual so it was used as the model for predicting a student's admission or not. 
+
+```{r, message=FALSE, fig.width=15, fig.height=10}
+p3 <- add_predictions(df,mod2,type = "response") %>%
+  ggplot(aes(x=gpa,y=pred, color=gre))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x="GPA", y="Likelihood of Admission", color="GRE score")+
+  facet_wrap(~rank)
+p4 <- add_predictions(df,mod2,type = "response") %>%
+  ggplot(aes(x=gpa,y=pred, color=rank))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x="GPA", y="Likelihood of Admission", color="Rank")+
+  theme_minimal()
+p5 <- add_predictions(df,mod2,type = "response") %>%
+  ggplot(aes(x=gre,y=pred, color=rank))+
+  geom_point()+
+  geom_smooth(method = "lm")+
+  labs(x="GRE Score", y="Likelihood of Admission", color="Rank")+
+  theme_minimal()
+p3+p4/p5
+```
+
+**Figure 3.1**
+  Plots showing the likelihood of admission to graduate school based upon an undergraduate's school rank, GRE score, and GPA. 
+
+## Conclusion
+  Based on the models above, an undergraduate student's GPA and GRE scores do seem to have a significant effect on their chance of getting in to graduate school. Notably, if a student applies from an undergraduate school with a ranking of 1 or 2, they will have better odds of graduate school acceptance than a student applying from a rank 3 or 4 school.
+
+
+
+
+
+
+
+
+
 
