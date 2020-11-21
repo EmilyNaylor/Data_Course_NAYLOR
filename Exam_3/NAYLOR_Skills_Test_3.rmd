@@ -1,0 +1,207 @@
+---
+title: "Exam 3"
+author: "Naylor"
+date: "11/20/2020"
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+#### *Below is a summary of the results from the exam 3 skills test I created for my data analysis class's third exam, the R file with the coding for this exam is called: "NAYLOR_Skills_Test_3.R"*
+
+
+# **Part 1**
+## *College faculty salaries*
+
+The first part of the exam was to look at the different factors that can affect the salaries of professors based on their rank, tier, and state. The ranks were classified as assistant (which are not tenured professors), associate (tenured professors), and full (professors that have been around for a long time). The college tiers were based upon how much funding is used for research versus the amount used for teaching. Tier I refers to universities that spend more on funding rather than teaching.
+
+The data (FacultySalaries_1995.csv) used for this was data collected from 1995 containing the faculty salaries and compensations. As it was raw data it needed to be cleaned first:
+
+```{r,message=FALSE, warning=FALSE, results="hide"}
+## loaded packages
+library(tidyverse)
+library(broom)
+library (janitor)
+
+## Load and clean FacultySalaries_1995.csv file ##
+
+# Loaded Data in 
+fs <- read_csv("FacultySalaries_1995.csv")
+
+# get rid of un-necessary capitalization 
+names(fs) <- make_clean_names(names(fs))
+names(fs)
+
+# separate full professor, associate professor, associate professor, and all professors
+
+# full professor
+full <- fs %>% select(c(1:4,16), ends_with("_all"), matches("full_prof")) %>%
+  pivot_longer(contains("full_prof"),
+               names_to= c("measurement", "rank"),values_to="average",
+               names_prefix= "avg_full_prof_",
+               names_sep= "_") %>%
+  mutate(rank="Full")
+               
+
+# associate professor
+assoc <- fs %>% select(c(1:4,16), ends_with("_all"), matches("assoc_prof")) %>%
+  pivot_longer(contains("assoc_prof"),
+               names_to= c("measurement", "rank"),values_to="average",
+               names_prefix= "avg_assoc_prof_",
+               names_sep= "_") %>%
+  mutate(rank="Assoc")
+
+# assistant professor
+assist <- fs %>% select(c(1:4,16), ends_with("_all"), matches("assist_prof")) %>%
+  pivot_longer(contains("assist_prof"),
+               names_to= c("measurement", "rank"),values_to="average",
+               names_prefix= "avg_assist_prof_",
+               names_sep= "_") %>%
+  mutate(rank="Assist")
+
+#combine the different ranks
+full <- rbind(full,assoc,assist)
+
+# re-make the comp, salary, and number columns 
+full <- full %>% pivot_wider(
+  names_from = measurement,
+  values_from = average)
+
+#change rank from character to factor)
+full$rank <- as.factor(full$rank)
+str(full$rank)
+```
+
+Below is a summary of the cleaned data:
+```{r,message=FALSE, warning=FALSE}
+summary(full)
+```
+
+```{r,,message=FALSE, warning=FALSE}
+p1 <- full %>% filter(tier != "VIIB") %>%
+  ggplot(aes(x=rank, y=salary, fill=rank))+
+  geom_boxplot() +
+  facet_wrap(~tier)+
+  labs(y="Salary", x="Rank", fill="Rank")+
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 75))
+p1
+```
+
+
+
+**FIGURE 1.1** Box-plot of salaries by rank and tier. There seems to be a positive correlation between salary and rank where a full professor has the highest average salary, followed by associate professor, and assistant professors getting the lowest average salary. Additionally, it looks as though there is a positive correlation between tier and the salary, where tier I giving the highest average salary, followed by tier IIA, then tier IIB.
+
+The figure above was saved as NAYLOR_Fig_1.jpg:
+```{r, message=FALSE, warning=FALSE, results="hide"}
+# export the graph
+ggsave("NAYLOR_Fig_1.jpg",plot=p1)
+```
+
+An ANOVA model was used to test the influence of the variables: state, tier, and rank on salary. The interactions between any of the 3 variables tested within the model were not tested:
+```{r, message=FALSE, warning=FALSE, results="hide"}
+# create a model using state, tier, and rank as predictors for salary
+mod1 <- aov(data= full, salary ~ state + tier + rank)
+```
+
+**TABLE 1.1**
+  Summary of the ANOVA model. There was a significant p-value of less than 0.05 for all three variable (state, tier, and rank). This suggests that the state, tier, and rank have an impact on the salary of the professor.
+```{r,message=FALSE}
+#summary of the modal
+summary(mod1)
+```
+
+The results from the ANOVA table was exported into the file named "Salary_ANOVA_Summary.txt":
+```{r, message=FALSE, warning=FALSE, results="hide"}
+#export the ANOVA table.
+capture.output(summary(mod1), file="Salary_ANOVA_Summary.txt")
+```
+
+
+
+# **Part 2**
+## *Chemical degradation of essential oils from dead cedar trees*
+
+The next part of the exam examined how the different chemicals used for essential oils (derived from a number of dead cedar trees) degraded over time since the tree's death from fire.
+
+The data (file name "Juniper_Oils.csv") used for this part came from a collaboration between Young Living Inc. and UVU Microbiology, where they collected dead cedar trees and measured the chemical composition of their essential oil content. It was cleaned to only contain the Chemical ID, years since the tree was burned, and the mass-spec concentrations of the chemicals:
+
+```{r, message=FALSE, warning=FALSE, results="hide"}
+#load in the "Juniper_Oils.csv" data.
+jo <- read_csv("Juniper_Oils.csv")
+
+# select only the desired columns
+jo_chem <- jo %>%
+  select('alpha-pinene':thujopsenal,41) %>%
+  pivot_longer(-YearsSinceBurn,
+               names_to="ChemicalID",
+               values_to="Concentration")
+```
+
+Below is the summary of the cleaned and specified data:
+```{r,message=FALSE, warning=FALSE}
+summary(jo_chem)
+```
+
+```{r,,message=FALSE, fig.width=10}
+p2 <- jo_chem %>%
+  ggplot(aes(x=YearsSinceBurn, y=Concentration))+
+  geom_smooth()+
+  facet_wrap(~ChemicalID, scales= "free") +
+  theme_minimal()
+p2
+```
+**FIGURE 2.1**
+Plot of the smoothed conditional mean of concentration by years since the tree was burned and seperated by chemical ID. The chemicals that seemed to degrade over time are alpha-acorenol, beta-acorenol, and cedr-8-en-15-ol.
+
+The figure above was saved as NAYLOR_Fig_2.jpg:
+```{r, message=FALSE, warning=FALSE, results="hide", fig.width=10}
+# export the graph
+ggsave("NAYLOR_Fig_2.jpg",plot=p2, width=10)
+```
+
+A generalized line model was used to test the degradation of the chemicals over time.
+```{r, message=FALSE, warning=FALSE, results="hide"}
+mod2 <- lm(Concentration ~ ChemicalID * YearsSinceBurn, jo_chem)
+
+# summarize the model
+summary(mod2)
+
+#tidy the model
+tidy(mod2)
+tidy_mod2= tidy(mod2)
+
+# get the significant of less than 0.5
+glm_sig <- filter(tidy_mod2, p.value < 0.05)
+
+#clean the data to get rid of ChemicalID
+glm_sig$term <- str_remove(glm_sig$term, "ChemicalID")
+```
+
+**TABLE 2.1**
+  Summary of the generalized linear model with only the chemicals that had a significant p-value of less than 0.05. It was more likely that there would be higher than average concentrations of alpha-cedrene, cedr-8-en-13-ol, cedrol, cis-thujopsene, and widdrol. However, there was nothing significant enough to suggest that any of the chemicals degraded over time. 
+```{r,message=FALSE}
+# the table of chemicals with significance of less than 0.05
+glm_sig
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
