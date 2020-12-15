@@ -21,7 +21,7 @@ p1 <- ggplot(df, aes(x=Year, y=Land.Value, color=region))+
 p1
 
 ## Export it to your Exam_2 folder as LASTNAME_Fig_1.jpg (note, that's a jpg, not a png) ##
-ggsave("NAYLOR_Fig_1.jpg", plot= p1)
+ggsave("NAYLOR_Fig_1.jpg", plot= p1, width= 5)
 
 
 ############
@@ -80,7 +80,7 @@ p2 <- df2 %>% ggplot(aes(x=Year, y=U5MR, color=Continent))+
 p2
 
 ## Export it to your Exam_2 folder as LASTNAME_Fig_2.jpg (note, that's a jpg, not a png)##
-ggsave("NAYLOR_Fig_2.jpg", plot=p2)
+ggsave("NAYLOR_Fig_2.jpg", plot=p2, width=5)
 
 
 ############
@@ -108,7 +108,7 @@ p3 <- yearly_mean %>%
 p3
   
 ## Export it to your Exam_2 folder as LASTNAME_Fig_3.jpg (note, that's a jpg, not a png) ##
-ggsave("NAYLOR_Fig_3.jpg", plot=p3)
+ggsave("NAYLOR_Fig_3.jpg", plot=p3, width=5)
   
 ############
 ## Task 6 ##
@@ -141,4 +141,4 @@ p4 <- prop %>%
 p4
 
 ## Export it to your Exam_2 folder as LASTNAME_Fig_3.jpg (note, that's a jpg, not a png) ##
-ggsave("NAYLOR_Fig_4.jpg", plot=p4)
+ggsave("NAYLOR_Fig_4.jpg", plot=p4, width=6.5)
