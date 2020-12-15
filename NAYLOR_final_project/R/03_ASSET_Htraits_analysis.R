@@ -37,7 +37,7 @@ ncntl <- diag(N00)
 
 ## Perform a heterogeneous two-sided subset analysis ##
 res <- h.traits(snps, traits.lab, beta.hat, sigma.hat, ncase=ncase,
-                ncntl=ncntl, cor=cor, cor.numr=FALSE, search=NULL,
+                ncntl=ncntl, cor=cor, cor.numr=FALSE, search=1,
                 side=2, meta=TRUE, zmax.args=NULL)
 
 ## Analysis summary ##
@@ -47,6 +47,12 @@ sum <- h.summary(res)
 ## Export the analysis results ##
 write.csv(sum,file="Data/h_trait_analysis.csv")
 
+## Extracting the SNPs that had significant associations 
+## with at least 3 of the diseases ##
 
+## retrieve the 1 sided subset ##
+sd1 <- sum$Subset.1sided
+
+## select SNPs with 3 or more traits association
 
 

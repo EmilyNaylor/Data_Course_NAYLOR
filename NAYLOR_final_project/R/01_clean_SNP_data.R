@@ -58,5 +58,5 @@ names(dat)
  full_dat <- full_join(OR,SE)
  
 ## Save the cleaned data, "Data/SNP_Data_Organized.csv" ##
- write.csv(full_dat, "Data/SNP_Data_Organized.csv")
+ write.csv(full_dat, "Data/SNP_Data_Organized.csv", row.names = FALSE)
  
