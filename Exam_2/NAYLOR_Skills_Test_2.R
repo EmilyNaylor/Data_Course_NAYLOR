@@ -94,7 +94,7 @@ ggsave("NAYLOR_Fig_2.jpg", plot=p2)
 
 ## filter and find the yearly mean by continent ##
 yearly_mean <- df2 %>%
-  group_by(Continent, Year) ## filters by continent and year
+  group_by(Continent, Year) %>% ## filters by continent and year
   na.omit() %>%            ## removes any na values
   mutate(MeanMR= mean(U5MR))## finds the mean mortality rate
 
