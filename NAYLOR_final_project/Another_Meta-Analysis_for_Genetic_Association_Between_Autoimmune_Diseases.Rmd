@@ -316,7 +316,7 @@ dev.off()
 
  ![](Results/Figures/Forest Plot 1.png)
 **Figure 1**
-Forest Plots showing the effects of the first four SNPs on CeD, RA, SSc, and T1D (see Table 1) The two-sided subset-based test found (a) the SNP of the gene *AFF3* (b)the SNP of the gene *BACH2* and (c) the SNP of the gene *CTLA4* to be positively associated to CeD, RA, and T1D with no association to SSc.(d)The SNP of the gene *ORMDL3* was found to be positively associated with RA, SSc, and T1D with no association to CeD.The p values for overall association with the use of standard meta-analysis, one-sided, and two-sided subset-based tests are shown along with their respective OR estimates at the bottom of the figure.
+Forest Plots showing the effects of the first four SNPs on CeD, RA, SSc, and T1D (see Table 1) The two-sided subset-based test found (a) the SNP of the gene *AFF3* (b)the SNP of the gene *BACH2* and (c) the SNP of the gene *CTLA4* to be positively associated to CeD, RA, and T1D with no association to SSc.(d)The SNP of the gene *ORMDL3* was found to be positively associated with RA, SSc, and T1D with no association to CeD. There were no negative associations found. The p values for overall association with the use of standard meta-analysis, one-sided, and two-sided subset-based tests are shown along with their respective OR estimates at the bottom of the figure.
 
 ```{r, message=FALSE, warning=FALSE, results="hide", fig.show="hide"}
 ## Create forest plots for each of the genes with at least 3 disease association ##
@@ -349,7 +349,7 @@ dev.off()
  ![](Results/Figures/Forest Plot 2.png)
 
 **Figure 2**
-Forest Plots showing the effects of the first four SNPs on CeD, RA, SSc, and T1D (see Table 1) The two-sided subset-based test found (a & b) the SNPs of the gene *STAT4* and (c) the SNP of the gene *YDJC* to be positively associated to CeD, RA, and SSc with no association to T1D.(d)The SNP of the gene *TYK2* was found to be positively associated with RA, SSc, and T1D with no association to CeD.The p values for overall association with the use of standard meta-analysis, one-sided, and two-sided subset-based tests are shown along with their respective OR estimates at the bottom of the figure.
+Forest Plots showing the effects of the first four SNPs on CeD, RA, SSc, and T1D (see Table 1) The two-sided subset-based test found (a & b) the SNPs of the gene *STAT4* and (c) the SNP of the gene *YDJC* to be positively associated to CeD, RA, and SSc with no association to T1D.(d)The SNP of the gene *TYK2* was found to be positively associated with RA, SSc, and T1D with no association to CeD. There were no negative associations found. The p values for overall association with the use of standard meta-analysis, one-sided, and two-sided subset-based tests are shown along with their respective OR estimates at the bottom of the figure.
 
 ## Discussion
 The seven genes *AFF3*, *BACH2*, *CTLA4*, *ORMDL3*, *STAT4*, *YDJC*, and *TYK2* had SNPs positively associated by the heterogeneous two-sided subset-based test with at least 3 of the autoimmune diseases that were analyzed. What this basically means is that people with one of the autoimmune diseases such as type 1 diabetes is more likely to have one or more of the SNPs such as the *BACH2* SNP. While these results do not directly imply that any of the genes may contribute to an underlying genetic component of autoimmunity, they can serve as possible candidates for further study of their function in autoimmunity or as a potential genetic marker for autoimmunity.  
