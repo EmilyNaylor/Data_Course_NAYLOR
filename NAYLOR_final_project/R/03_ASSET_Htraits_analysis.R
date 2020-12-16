@@ -47,7 +47,7 @@ h.summary(res)
 sum <- h.summary(res)
 
 ## Export the analysis results ##
-write.csv(sum,file="Data/h_trait_analysis.csv")
+write.csv(sum,file="Data/h_trait_analysis.csv",row.names = FALSE)
 
 ## Extracting the SNPs that had significant associations 
 ## with at least 3 of the diseases ##
