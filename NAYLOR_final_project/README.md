@@ -1,4 +1,5 @@
-Emily Naylor December 16,2020
+Emily Naylor 
+December 16,2020
 Another Meta-Analysis for Genetic Association Between Autoimmune Disease
 My Data-Analysis Final Project
 
