@@ -21,7 +21,7 @@ N00 <- read.table("Data/control_matrix.txt")
 ## Load in Case Matrix ##
 N11 <- read.table("Data/case_matrix.txt")
 ## Load in Case/Control Matrix ##
-N10 <- read.table("Data/case_control_matrix.txt")
+N10 <- read.table("Data/case_control_matrix.txt") 
 
 ## Change it into a matrix ##
 N00 <- as.matrix(N00)
