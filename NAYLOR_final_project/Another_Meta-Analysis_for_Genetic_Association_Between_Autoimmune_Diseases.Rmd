@@ -1,6 +1,6 @@
 ---
 title: "Another Meta-Analysis for Genetic Association Between Autoimmune Diseases"
-subtitile: "My Data-Analysis Final Project"
+subtitle: "My Data-Analysis Final Project"
 author: "Emily Naylor"
 date: "12/15/2020"
 output: 
