@@ -39,7 +39,7 @@ ncntl <- diag(N00)
 
 ## Perform a heterogeneous two-sided subset analysis ##
 res <- h.traits(snps, traits.lab, beta.hat, sigma.hat, ncase=ncase,
-                ncntl=ncntl, cor=cor, cor.numr=FALSE, search=1,
+                ncntl=ncntl, cor=cor, cor.numr=FALSE, search=NULL,
                 side=2, meta=TRUE, zmax.args=NULL)
 
 ## Analysis summary ##
@@ -78,7 +78,54 @@ results <- full_join(disease3,dat,by="snp")
 ## Export the results of the SNP analysis ##
 write.csv(results, file = "Results/Tables/SNP_results.csv")
 
-## Create forest plots for each gene ##
+## Create forest plots for each of the genes with at least 3 disease association ##
 
 ## AFF3 ##
 h.forestPlot(res, "rs13415465")
+dev.copy(png,"Results/Figures//AFF3fplot.png",
+         width=8,height=6,units="in",res=100)
+dev.off()
+
+## BACH2 ##
+h.forestPlot(res, "rs72928038")
+dev.copy(png,"Results/Figures//BACH2fplot.png",
+         width=8,height=6,units="in",res=100)
+dev.off()
+
+## CTLA4 ##
+h.forestPlot(res, "rs3087243")
+dev.copy(png,"Results/Figures//CTLA4fplot.png",
+         width=8,height=6,units="in",res=100)
+dev.off()
+
+## ORMDL3 ##
+h.forestPlot(res, "rs1054609")
+dev.copy(png,"Results/Figures//ORMDL3fplot.png",
+         width=8,height=6,units="in",res=100)
+dev.off()
+
+## STAT4 ##
+## First SNP ##
+h.forestPlot(res, "rs7574865")
+dev.copy(png,"Results/Figures//STAT4_1_fplot.png",
+         width=8,height=6,units="in",res=100)
+dev.off()
+## Second SNP ##
+h.forestPlot(res, "rs6749371")
+dev.copy(png,"Results/Figures//STAT4_2_fplot.png",
+         width=8,height=6,units="in",res=100)
+dev.off()
+
+## TYK2 ##
+h.forestPlot(res, "rs74956615")
+dev.copy(png,"Results/Figures//TYK2fplot.png",
+         width=8,height=6,units="in",res=100)
+dev.off()
+
+## YDJC ##
+h.forestPlot(res, "rs66534072")
+dev.copy(png,"Results/Figures//YDJCfplot.png",
+         width=8,height=6,units="in",res=100)
+dev.off()
+
+
