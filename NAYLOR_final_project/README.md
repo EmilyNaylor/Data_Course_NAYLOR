@@ -40,4 +40,4 @@ Results folders and files
 
 	Table -- Contains the table results of the 8 SNPs associated with at least 3 diseases.
 	
-	Figures -- Contains the individual forest plots for each of the 8 SNPs along with the two combined plots. 
+	Figures -- Contains the individual forest plots for each of the 8 SNPs along with the two combined plots that had to be combined outside of R due to the h.forest function of ASSET not having a functionality for combining plots. 
