@@ -1,5 +1,5 @@
 ##################################################
-#   This script performs a heterogeneous          #
+#   This script performs a heterogeneous         #
 #   two-sided subset analysis using the          #
 #   package ASSET                                #
 #                                                #
