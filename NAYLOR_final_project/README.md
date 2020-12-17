@@ -10,7 +10,7 @@ My Data-Analysis Final Project
 The final report is contained in the r markdown Another_Meta-Analysis_for_Genetic_Association_Between_Autoimmune_Diseases.Rmd with its corresponding html file.
 
 
-R folder and files
+# R folder and files #
 
 	01_clean_SNP_data.R -- The R file where the data was cleaned up for analysis. The code chunk under the Quality Control subsection of the markdown report.
 
@@ -20,7 +20,7 @@ R folder and files
 	
 	ASSET_manual_examples.R -- The R file containing the examples on how to use the commands of the R package ASSET from the Vignette.
 
-Data folder and files
+# Data folder and files #
 	
 	snp_data_raw.xlsx -- The raw qualitity controlled data from Marquez et al. (2018). Contains the SNP data as well as the sample size data.
 	
@@ -36,7 +36,7 @@ Data folder and files
 	
 	h_trait_analysis.csv -- The summarized h.trait analysis results of all of the SNPs examined within the project. 
 
-Results folders and files
+# Results folders and files #
 
 	Table -- Contains the table results of the 8 SNPs associated with at least 3 diseases.
 	
